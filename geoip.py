@@ -39,9 +39,12 @@ class geoip_helper():
 			country = response.country.iso_code 
 			if (country == None):
 				country = "*"
-			return {"longitude":response.location.longitude, "latitude":response.location.latitude, "country":country}
+			city = response.city.name
+			if (city == None):
+				city = "*"
+			return {"longitude":response.location.longitude, "latitude":response.location.latitude, "country":country, "city":city}
 		except geoip2.errors.AddressNotFoundError:
-			return {"longitude":"*", "latitude":"*", "country":"*"}
+			return {"longitude":"*", "latitude":"*", "country":"*", "city":"*"}
 	
 	def query_from_czdb(self, ip):
 		try:

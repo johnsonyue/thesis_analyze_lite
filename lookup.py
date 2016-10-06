@@ -25,8 +25,7 @@ class lookup:
 		self.get_pfx2asn()
 		self.get_asn2cc()
 		sys.stderr.write("finished initializing lookup object\n")
-
-
+		
 	#asn => cc.
 	def get_asn2cc(self):
 		#print ("\tbuilding asn2cc ...")
