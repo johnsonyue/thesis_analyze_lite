@@ -1,4 +1,5 @@
 import geoip2.database
+import IP2Location
 import lookup
 import qqwry
 import os
@@ -18,10 +19,11 @@ class geoip_helper():
 		self.reader = geoip2.database.Reader('GeoLite2-City.mmdb')
 	
 	def query(self, ip):
-		bgp = self.query_from_bgp(ip);
-		mmdb = self.query_from_mmdb(ip);
-		czdb = self.query_from_czdb(ip);
-		return {"bgp":bgp, "mmdb":mmdb, "czdb":czdb}
+		bgp = self.query_from_bgp(ip)
+		mmdb = self.query_from_mmdb(ip)
+		czdb = self.query_from_czdb(ip)
+		ip2location = self.query_from_ip2location(ip)
+		return {"bgp":bgp, "mmdb":mmdb, "czdb":czdb, "ip2location":ip2location}
 	
 	def query_from_bgp(self, ip):
 		asn = self.lookup.get_asn_from_pfx(ip)
@@ -52,3 +54,15 @@ class geoip_helper():
 			return {"country":country, "area":area}
 		except:
 			return {"country":"*", "area":"*"}
+	
+	def query_from_ip2location(self, ip):
+		try:
+			database = IP2Location.IP2Location()
+			database.open("IP2LOCATION-LITE-DB11.BIN")
+			rec = database.get_all(ip)
+			
+			if rec is not None:
+				return {"country":rec.country_short, "city":rec.city, "latitude":rec.latitude, "longitude":rec.longitude}
+		except:
+				return {"country":"*", "city":"*", "latitude":"*", "longitude":"*"}
+			
